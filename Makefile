@@ -15,7 +15,9 @@ SFML_FLAGS = -lsfml-graphics -lsfml-system -lsfml-window
 
 SRC = src/Main.cpp \
       src/SafePaint.cpp \
-      src/TrollRenderer.cpp
+      src/TrollRenderer.cpp \
+      src/AssetManager.cpp \
+      src/GlitchManager.cpp
 
 OBJ = $(SRC:.cpp=.o)
 

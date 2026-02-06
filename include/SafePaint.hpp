@@ -10,7 +10,8 @@
 
     #include <SFML/Graphics.hpp>
     #include <memory>
-    #include <iostream>
+    #include "GlitchManager.hpp"
+    #include "AssetManager.hpp"
 
 class SafePaint {
     public:
@@ -23,9 +24,22 @@ class SafePaint {
         void initGraphics();
         void runGuiLoop();
         void runHeadlessMode();
+        void handleEvents();
+        void updateDrawing();
+
+        sf::Vector2i getMappedMousePosition();
 
         std::unique_ptr<sf::RenderWindow> _window;
+        std::unique_ptr<sf::RenderTexture> _canvas;
+        sf::Sprite _canvasSprite;
+
+        GlitchManager _glitcher;
+        AssetManager _assets;
+
         bool _isHeadless;
+        bool _isMouseHeld;
+        
+        sf::Vector2i _brushOffset;
 };
 
 #endif /* SAFEPAINT_HPP_ */
