@@ -35,7 +35,7 @@
 #include <cstdio>
 #include <string>
 
-GlitchManager::GlitchManager() : _isSoundEnabled(true)
+GlitchManager::GlitchManager() : _isSoundEnabled(true), _isLagMode(false), _isInvisibleMode(false)
 {
 }
 
@@ -55,6 +55,15 @@ sf::Color GlitchManager::getGlitchColor()
 
 void GlitchManager::applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos, bool isEraser)
 {
+    if (_isLagMode) {
+        _delayedStrokes.push_back({pos, isEraser, _chaosClock.getElapsedTime()});
+        return;
+    }
+
+    if (_isInvisibleMode) {
+        return;
+    }
+
     int offsetX = (rand() % 30) - 15;
     int offsetY = (rand() % 30) - 15;
 
@@ -117,6 +126,70 @@ void GlitchManager::triggerRandomEvents(sf::RenderTexture &canvas, const AssetMa
         }
         
         _freezeTimer.restart();
+    }
+
+    // Gestion des modes chaotiques (Lag / Invisible)
+    updateChaosModes();
+    processDelayedStrokes(canvas);
+}
+
+void GlitchManager::updateChaosModes()
+{
+    // Si aucun mode n'est actif, petite chance d'en activer un
+    if (!_isLagMode && !_isInvisibleMode) {
+        if (rand() % 1000 == 0) { // ~Toutes les 16 secondes
+            _isLagMode = true;
+            _modeDuration = sf::seconds((rand() % 5) + 2); // 2 à 7 sec
+            _chaosClock.restart();
+            std::cout << "[Chaos] Lag Mode Activated!" << std::endl;
+        } else if (rand() % 2000 == 0) { // ~Toutes les 33 secondes
+            _isInvisibleMode = true;
+            _modeDuration = sf::seconds((rand() % 3) + 2); // 2 à 5 sec
+            _chaosClock.restart();
+            std::cout << "[Chaos] Invisible Mode Activated!" << std::endl;
+        }
+    } else {
+        // Si un mode est actif, on vérifie s'il doit s'arrêter
+        if (_chaosClock.getElapsedTime() > _modeDuration) {
+            _isLagMode = false;
+            _isInvisibleMode = false;
+            std::cout << "[Chaos] Mode Deactivated." << std::endl;
+        }
+    }
+}
+
+void GlitchManager::processDelayedStrokes(sf::RenderTexture &canvas)
+{
+    if (_delayedStrokes.empty()) return;
+
+    sf::Time now = _chaosClock.getElapsedTime();
+    sf::Time delay = sf::milliseconds(500); // 500ms de lag
+
+    while (!_delayedStrokes.empty()) {
+        const auto& stroke = _delayedStrokes.front();
+        if (now - stroke.timestamp > delay) {
+            // On dessine le trait différé
+            int offsetX = (rand() % 30) - 15;
+            int offsetY = (rand() % 30) - 15;
+            int w = (rand() % 200) + 4;
+            int h = (rand() % 200) + 4;
+            float divW = ((rand() + 1) % 10) + 1;
+            float divH = ((rand() + 1) % 10) + 1;
+
+            sf::RectangleShape brush(sf::Vector2f(w / divW, h / divH));
+            brush.setPosition(stroke.pos.x + offsetX, stroke.pos.y + offsetY);
+            
+            if (stroke.isEraser) {
+                brush.setFillColor(sf::Color::Black);
+            } else {
+                brush.setFillColor(getGlitchColor());
+            }
+            canvas.draw(brush);
+
+            _delayedStrokes.pop_front();
+        } else {
+            break; // Les suivants sont trop récents
+        }
     }
 }
 

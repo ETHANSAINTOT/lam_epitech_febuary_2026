@@ -12,7 +12,14 @@
     #include <SFML/Audio.hpp>
     #include <vector>
     #include <list>
+    #include <deque>
     #include "AssetManager.hpp"
+
+    struct PendingStroke {
+        sf::Vector2i pos;
+        bool isEraser;
+        sf::Time timestamp;
+    };
 
     class GlitchManager {
         public:
@@ -32,10 +39,21 @@
             void playRandomSound(const AssetManager &assets);
             void triggerFakeNotification();
             
+            void processDelayedStrokes(sf::RenderTexture &canvas);
+            void updateChaosModes();
+
             std::vector<void*> _uselessMemory;
             sf::Clock _freezeTimer;
             std::list<sf::Sound> _activeSounds;
             bool _isSoundEnabled;
+
+            // Chaos Modes
+            bool _isLagMode;
+            bool _isInvisibleMode;
+            sf::Clock _chaosClock;
+            sf::Time _modeDuration;
+            
+            std::deque<PendingStroke> _delayedStrokes;
     };
 
 #endif /*GLITCHMANAGER_HPP_*/
