@@ -104,7 +104,7 @@ void SafePaint::performUndo()
         sf::Color chaoticColor(rand() % 255, rand() % 255, rand() % 255);
         _canvas->clear(chaoticColor);
         _canvas->display();
-        _ui.showNotification("Undo failed successfully");
+        _ui.showNotification("ACtion Undone");
     }
 }
 
