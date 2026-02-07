@@ -9,16 +9,17 @@ CXX = clang++
 
 NAME = SafePaint
 
-CXX_FLAGS = -Wall -Wextra -Werror -std=c++20
+CXX_FLAGS = -Iinclude -Wall -Wextra -Werror -std=c++20 -g
 
-SFML_FLAGS = -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio
+SFML_FLAGS = -lgif -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio
 
 SRC = src/Main.cpp \
       src/SafePaint.cpp \
       src/TrollRenderer.cpp \
       src/AssetManager.cpp \
       src/GlitchManager.cpp \
-      src/UIManager.cpp
+      src/UIManager.cpp \
+      src/AnimatedGif.cpp
 
 OBJ = $(SRC:.cpp=.o)
 

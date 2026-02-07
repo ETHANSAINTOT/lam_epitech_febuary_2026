@@ -31,6 +31,7 @@
             
             void saveState();
             void performUndo();
+            void loadRandomGif(sf::RenderTexture &canvas, AssetManager &assets);
 
             sf::Vector2i getMappedMousePosition();
 

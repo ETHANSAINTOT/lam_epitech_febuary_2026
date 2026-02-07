@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstring>
+#include <iostream>
 
 SafePaint::SafePaint(bool soundEnabled, char **env) : _isHeadless(true), _isMouseHeld(false), _isEraserMode(false)
 {
@@ -180,6 +181,16 @@ void SafePaint::handleEvents()
     }
 }
 
+void SafePaint::loadRandomGif(sf::RenderTexture &canvas, AssetManager &assets)
+{
+    float x = rand() % canvas.getSize().x;
+    float y = rand() % canvas.getSize().y;
+    unsigned long duration = (rand() % 120) + 10;
+    assets.loadRandomGif(sf::Vector2i(x, y), duration);
+    
+    std::cout << "[Feature] Loaded gif instance!" << std::endl;
+}
+
 void SafePaint::updateDrawing()
 {
     if (_isMouseHeld) {
@@ -191,6 +202,11 @@ void SafePaint::updateDrawing()
     }
     
     if (_assets) {
+        if (rand() % 250 == 0) {
+            loadRandomGif(*_canvas, *_assets);
+        }
+        _assets->updateGifs();
+        _assets->drawGifs(*_canvas);
         _glitcher.triggerRandomEvents(*_canvas, *_assets);
     }
 }

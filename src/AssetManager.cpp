@@ -10,6 +10,12 @@
 
 AssetManager::AssetManager()
 {
+    loadGif("animated_cat", "assets/gif/cat.gif");
+    loadGif("popcat", "assets/gif/popcat.gif");
+    loadGif("slamdesk", "assets/gif/slamdesk.gif");
+
+    _gifsKeys = {"animated_cat", "popcat", "slamdesk"};
+
     loadTexture("cat_meme", "assets/image/cat_meme.png");
     loadTexture("dog_meme", "assets/image/dog_meme.png");
     loadTexture("sponge_bob", "assets/image/sponge_bob.png");
@@ -68,4 +74,64 @@ const sf::SoundBuffer &AssetManager::getRandomSoundBuffer() const
 {
     int index = rand() % _soundKeys.size();
     return _soundBuffers.at(_soundKeys[index]);
+}
+
+void AssetManager::loadGif(const std::string &name, const std::string &filename)
+{
+    AnimatedGif gif;
+    if (gif.loadFromFile(filename)) {
+        _gifs[name] = gif;
+    }
+}
+
+const AnimatedGif &AssetManager::getGif(const std::string &name) const
+{
+    return _gifs.at(name);
+}
+
+AnimatedGif &AssetManager::getGif(const std::string &name)
+{
+    return _gifs.at(name);
+}
+
+
+void AssetManager::loadRandomGif(sf::Vector2i pos, unsigned long duration)
+{
+    int index = rand() % _gifsKeys.size();
+    _renderGif.push_back(GifInstance {
+        pos,
+        duration,
+        &_gifs.at(_gifsKeys[index])
+    });
+}
+
+void AssetManager::updateGifs()
+{
+    for (auto &i: _gifsKeys) {
+        AnimatedGif &gif = getGif(i);
+        gif.update();
+    }
+}
+
+void AssetManager::drawGifs(sf::RenderTexture &canvas)
+{
+    for (auto &i: _renderGif) {
+        sf::Sprite sprite(i.gif->getCurrentTexture());
+        sprite.setPosition(
+            i.pos.x,
+            i.pos.y
+        );
+        canvas.draw(sprite);
+    }
+}
+
+const AnimatedGif &AssetManager::getRandomGif() const
+{
+    int index = rand() % _gifsKeys.size();
+    return _gifs.at(_memeKeys[index]);
+}
+
+bool AssetManager::hasGif(const std::string &name) const
+{
+    return _gifs.find(name) != _gifs.end();
 }
