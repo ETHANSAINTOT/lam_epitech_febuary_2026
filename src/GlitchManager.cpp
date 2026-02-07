@@ -39,7 +39,10 @@ void GlitchManager::applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos, bool
     int offsetX = (rand() % 30) - 15;
     int offsetY = (rand() % 30) - 15;
 
-    sf::RectangleShape brush(sf::Vector2f(20, 20));
+    int w = (rand() % 200) + 4;
+    int h = (rand() % 200) + 4;
+
+    sf::RectangleShape brush(sf::Vector2f(w / (((rand() + 1) % 10) + 1), h / (((rand() + 1) % 10) + 1)));
     brush.setPosition(pos.x + offsetX, pos.y + offsetY);
     
     if (isEraser) {
