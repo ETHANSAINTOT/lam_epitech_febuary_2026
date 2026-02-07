@@ -40,6 +40,7 @@ void UIManager::initToolbar(const AssetManager &assets)
     setupButton(_btnBrush, "paint_brush");
     setupButton(_btnEraser, "earaser");
     setupButton(_btnSave, "save_icon");
+    setupButton(_btnClose, "close_icon");
 }
 
 void UIManager::initPalette()
@@ -73,6 +74,8 @@ ToolType UIManager::handleInput(sf::Vector2i mousePos)
             return ToolType::ERASER;
         if (_btnSave.getGlobalBounds().contains(mousePos.x, mousePos.y))
             return ToolType::SAVE_ACTION;
+        if (_btnClose.getGlobalBounds().contains(mousePos.x, mousePos.y))
+            return ToolType::CLOSE_ACTION;
     }
 
     float bottomY = _bottomBar.getPosition().y;
@@ -112,16 +115,18 @@ void UIManager::draw(sf::RenderWindow &window)
     window.draw(_topBar);
 
     float centerX = winSize.x / 2.0f;
-    float btnSpacing = 120.0f;
-    float halfBtn = 32.0f; 
+    float halfBtn = 32.0f;
+    float spacing = 100.0f;
 
-    _btnBrush.setPosition(centerX - btnSpacing - halfBtn, 8);
-    _btnEraser.setPosition(centerX - halfBtn, 8);
-    _btnSave.setPosition(centerX + btnSpacing - halfBtn, 8);
+    _btnBrush.setPosition(centerX - (1.5f * spacing) - halfBtn, 8);
+    _btnEraser.setPosition(centerX - (0.5f * spacing) - halfBtn, 8);
+    _btnSave.setPosition(centerX + (0.5f * spacing) - halfBtn, 8);
+    _btnClose.setPosition(centerX + (1.5f * spacing) - halfBtn, 8);
 
     window.draw(_btnBrush);
     window.draw(_btnEraser);
     window.draw(_btnSave);
+    window.draw(_btnClose);
 
     _bottomBar.setPosition(0, winSize.y - 60);
     _bottomBar.setSize(sf::Vector2f(winSize.x, 60));

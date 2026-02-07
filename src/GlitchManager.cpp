@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2026
 ** JAM #1
 ** File description:
-** GlitchManager.cpp
+** src/GlitchManager.cpp
 */
 
 #include "../include/GlitchManager.hpp"
@@ -12,6 +12,9 @@
 #include <ctime>
 #include <filesystem>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <cstdio>
 
 GlitchManager::GlitchManager()
 {
@@ -86,13 +89,41 @@ void GlitchManager::saveAndCorrupt(const sf::RenderTexture &canvas)
     if (!std::filesystem::exists("save"))
         std::filesystem::create_directory("save");
 
-    std::string filename = "save/drawing_" + std::to_string(std::time(nullptr)) + ".png";
-    sf::Image screenshot = canvas.getTexture().copyToImage();
+    auto now = std::time(nullptr);
+    auto tm = *std::localtime(&now);
+    std::ostringstream oss;
+    oss << "drawing_" << std::put_time(&tm, "%m_%d_%Y_%H_%M_%S") << ".png";
+    std::string defaultName = oss.str();
+
+    std::filesystem::path fullPath = std::filesystem::absolute("save") / defaultName;
+
+    std::string cmd = "zenity --file-selection --save --confirm-overwrite --filename=\"" + fullPath.string() + "\" 2>/dev/null";
     
-    if (!screenshot.saveToFile(filename))
+    FILE *pipe = popen(cmd.c_str(), "r");
+    if (!pipe)
+        return;
+
+    char buffer[1024];
+    std::string result = "";
+    if (fgets(buffer, 1024, pipe) != NULL) {
+        result = buffer;
+    }
+    pclose(pipe);
+
+    if (!result.empty() && result.back() == '\n')
+        result.pop_back();
+
+    if (result.empty())
+        return;
+
+    if (result.find(".png") == std::string::npos)
+        result += ".png";
+
+    sf::Image screenshot = canvas.getTexture().copyToImage();
+    if (!screenshot.saveToFile(result))
         return;
     
-    std::fstream file(filename, std::ios::in | std::ios::out | std::ios::binary);
+    std::fstream file(result, std::ios::in | std::ios::out | std::ios::binary);
     if (file.is_open()) {
         file.seekp(0);
         char garbage[] = "NOT_A_PNG"; 

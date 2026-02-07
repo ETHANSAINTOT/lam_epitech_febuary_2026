@@ -6,7 +6,6 @@
 */
 
 #include "../include/AssetManager.hpp"
-#include <iostream>
 
 AssetManager::AssetManager()
 {
@@ -18,6 +17,7 @@ AssetManager::AssetManager()
     loadTexture("paint_brush", "assets/image/paint_brush.jpeg");
     loadTexture("earaser", "assets/image/earaser.jpeg");
     loadTexture("save_icon", "assets/image/save.jpeg");
+    loadTexture("close_icon", "assets/image/close.jpeg");
 
     _memeKeys = {"cat_meme", "dog_meme", "sponge_bob", "troll_face"};
 }

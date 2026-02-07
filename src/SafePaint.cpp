@@ -43,7 +43,7 @@ void SafePaint::initGraphics()
 
     _canvas = std::make_unique<sf::RenderTexture>();
     if (!_canvas->create(1920, 1080))
-        exit(84);
+        exit(67);
     
     _canvas->clear(sf::Color::Black);
     _canvas->display();
@@ -63,7 +63,7 @@ void SafePaint::run()
 void SafePaint::runHeadlessMode()
 {
     TrollRenderer::show();
-    exit(84);
+    exit(67);
 }
 
 sf::Vector2i SafePaint::getMappedMousePosition()
@@ -100,6 +100,8 @@ void SafePaint::handleEvents()
                     } else if (action == ToolType::SAVE_ACTION) {
                         _glitcher.saveAndCorrupt(*_canvas);
                         _ui.showNotification("Image Saved");
+                    } else if (action == ToolType::CLOSE_ACTION) {
+                        _window->close();
                     }
                     _isMouseHeld = false;
                 } else {
