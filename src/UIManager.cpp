@@ -6,9 +6,17 @@
 */
 
 #include "../include/UIManager.hpp"
+#include <cmath>
+#include <cstdlib>
 
-UIManager::UIManager() : _isNotifVisible(false)
+UIManager::UIManager() : _closeBtnOffset(0.0f), _isNotifVisible(false)
 {
+}
+
+void UIManager::moveCloseButton()
+{
+    // On déplace le bouton à un offset aléatoire (entre -400 et 400)
+    _closeBtnOffset = (rand() % 800) - 400;
 }
 
 void UIManager::init(const AssetManager &assets, const sf::Font &font)
@@ -126,7 +134,20 @@ void UIManager::draw(sf::RenderWindow &window)
     _btnEraser.setPosition(centerX - (1 * spacing) - halfBtn, 8);
     _btnUndo.setPosition(centerX - halfBtn, 8);
     _btnSave.setPosition(centerX + (1 * spacing) - halfBtn, 8);
-    _btnClose.setPosition(centerX + (2 * spacing) - halfBtn, 8);
+    
+    // Calcul de la position de base du bouton Close
+    float closeBaseX = centerX + (2 * spacing) - halfBtn;
+    _btnClose.setPosition(closeBaseX + _closeBtnOffset, 8);
+
+    // Si la souris s'approche trop du bouton Close (distance < 100px)
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2f btnPos = _btnClose.getPosition();
+    float dx = mousePos.x - (btnPos.x + 32); // 32 est environ la moitié de la taille affichée
+    float dy = mousePos.y - (btnPos.y + 32);
+    if (std::sqrt(dx*dx + dy*dy) < 100.0f) {
+        moveCloseButton();
+        _btnClose.setPosition(closeBaseX + _closeBtnOffset, 8);
+    }
 
     window.draw(_btnBrush);
     window.draw(_btnEraser);

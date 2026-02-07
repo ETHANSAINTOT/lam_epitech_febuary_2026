@@ -35,6 +35,7 @@
         private:
             void initToolbar(const AssetManager &assets);
             void initPalette();
+            void moveCloseButton();
 
             sf::RectangleShape _topBar;
             sf::Sprite _btnBrush;
@@ -42,6 +43,7 @@
             sf::Sprite _btnSave;
             sf::Sprite _btnClose;
             sf::Sprite _btnUndo;
+            float _closeBtnOffset;
 
             sf::RectangleShape _bottomBar;
             std::vector<sf::RectangleShape> _colorSwatches;
