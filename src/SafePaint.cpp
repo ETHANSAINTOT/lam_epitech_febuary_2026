@@ -9,18 +9,32 @@
 #include "../include/TrollRenderer.hpp"
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
+#include <string_view>
 
-SafePaint::SafePaint(bool soundEnabled) : _isHeadless(false), _isMouseHeld(false), _isEraserMode(false)
+SafePaint::SafePaint(bool soundEnabled, char **env) : _isHeadless(true), _isMouseHeld(false), _isEraserMode(false)
 {
     std::srand(std::time(nullptr));
     _glitcher.setSoundEnabled(soundEnabled);
-    
+    if (env != nullptr) {
+        for (int i = 0; env[i] != nullptr; ++i) {
+            if (std::strncmp(env[i], "DISPLAY=", 8) == 0) {
+                _isHeadless = false;
+                break;
+            }
+        }
+    }
+    if (_isHeadless) {
+        return; 
+    }
+    _assets = std::make_unique<AssetManager>();
+
     initGraphics();
-    
     if (!_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
     }
-    if (!_isHeadless)
-        _ui.init(_assets, _font);
+    if (_assets) {
+        _ui.init(*_assets, _font);
+    }
 }
 
 SafePaint::~SafePaint()
@@ -29,12 +43,7 @@ SafePaint::~SafePaint()
 
 void SafePaint::initGraphics()
 {
-    const char *displayEnv = std::getenv("DISPLAY");
-
-    if (displayEnv == nullptr) {
-        _isHeadless = true;
-        return;
-    }
+    if (_isHeadless) return;
 
     _window = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(1280, 720),
@@ -70,6 +79,8 @@ void SafePaint::runHeadlessMode()
 
 sf::Vector2i SafePaint::getMappedMousePosition()
 {
+    if (!_window) return sf::Vector2i(0,0);
+
     sf::Vector2i winPos = sf::Mouse::getPosition(*_window);
     float scaleX = _canvasSprite.getScale().x;
     float scaleY = _canvasSprite.getScale().y;
@@ -142,7 +153,9 @@ void SafePaint::updateDrawing()
         _glitcher.applyBrush(*_canvas, drawPos, _isEraserMode);
         _canvas->display();
     }
-    _glitcher.triggerRandomEvents(*_canvas, _assets);
+    if (_assets) {
+        _glitcher.triggerRandomEvents(*_canvas, *_assets);
+    }
 }
 
 void SafePaint::runGuiLoop()

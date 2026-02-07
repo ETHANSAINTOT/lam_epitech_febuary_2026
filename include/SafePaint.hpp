@@ -16,7 +16,7 @@
 
     class SafePaint {
         public:
-            SafePaint(bool soundEnabled);
+            SafePaint(bool soundEnabled, char **env);
             ~SafePaint();
 
             void run();
@@ -32,9 +32,8 @@
             std::unique_ptr<sf::RenderWindow> _window;
             std::unique_ptr<sf::RenderTexture> _canvas;
             sf::Sprite _canvasSprite;
-
             GlitchManager _glitcher;
-            AssetManager _assets;
+            std::unique_ptr<AssetManager> _assets;
             UIManager _ui;
             sf::Font _font;
 

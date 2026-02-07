@@ -33,4 +33,3 @@ void TrollRenderer::show()
     std::cout << ">>> LAUNCHING EMERGENCY TROLL PROTOCOL..." << std::endl;
     std::cout << ">>> IT'S NOT A BUG, IT'S A FEATURE." << std::endl;
 }
-

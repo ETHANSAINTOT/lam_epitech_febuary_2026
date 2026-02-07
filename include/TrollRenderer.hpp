@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2026
 ** JAM #1
 ** File description:
-** TrollRenderer.hpp
+** include/TrollRenderer.hpp
 */
 
 #ifndef TROLLRENDERER_HPP_

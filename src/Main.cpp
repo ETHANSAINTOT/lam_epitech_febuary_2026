@@ -17,7 +17,7 @@ static void print_help(const char *binary_name)
     std::cout << "\t-h, --help\tDisplay this help" << std::endl;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
     bool soundEnabled = true;
 
@@ -32,10 +32,10 @@ int main(int argc, char **argv)
     }
 
     if (soundEnabled) {
-        std::cout << "🔊 Pensez a porter un casque, les sons sont activés." << std::endl;
+        std::cout << "Please wear headphone in public, sound are activated" << std::endl;
     }
 
-    SafePaint app(soundEnabled);
+    SafePaint app(soundEnabled, env);
     app.run();
     return 0;
 }
