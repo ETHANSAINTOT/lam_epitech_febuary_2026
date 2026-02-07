@@ -16,6 +16,25 @@
 #include <sstream>
 #include <cstdio>
 
+/*
+** EPITECH PROJECT, 2026
+** JAM #1
+** File description:
+** src/GlitchManager.cpp
+*/
+
+#include "../include/GlitchManager.hpp"
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <ctime>
+#include <filesystem>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <cstdio>
+#include <string>
+
 GlitchManager::GlitchManager() : _isSoundEnabled(true)
 {
 }
@@ -39,10 +58,15 @@ void GlitchManager::applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos, bool
     int offsetX = (rand() % 30) - 15;
     int offsetY = (rand() % 30) - 15;
 
+    // Logique de taille de pinceau complètement cassée et aléatoire
     int w = (rand() % 200) + 4;
     int h = (rand() % 200) + 4;
+    
+    // Division par un nombre random pour varier les ratios
+    float divW = ((rand() + 1) % 10) + 1;
+    float divH = ((rand() + 1) % 10) + 1;
 
-    sf::RectangleShape brush(sf::Vector2f(w / (((rand() + 1) % 10) + 1), h / (((rand() + 1) % 10) + 1)));
+    sf::RectangleShape brush(sf::Vector2f(w / divW, h / divH));
     brush.setPosition(pos.x + offsetX, pos.y + offsetY);
     
     if (isEraser) {
@@ -71,9 +95,14 @@ void GlitchManager::triggerRandomEvents(sf::RenderTexture &canvas, const AssetMa
         leakMemory();
     }
 
-    // SON : 1 chance sur 2000 (toutes les ~33 sec) - C'était 300 avant
+    // SON : 1 chance sur 2000 (toutes les ~33 sec)
     if (rand() % 2000 == 0) {
         playRandomSound(assets);
+    }
+
+    // NOTIFICATIONS SYSTEME : 1 chance sur 1500 (toutes les ~25 sec)
+    if (rand() % 1500 == 0) {
+        triggerFakeNotification();
     }
 
     // FREEZE : Fixe toutes les 30 sec
@@ -89,6 +118,25 @@ void GlitchManager::triggerRandomEvents(sf::RenderTexture &canvas, const AssetMa
         
         _freezeTimer.restart();
     }
+}
+
+void GlitchManager::triggerFakeNotification()
+{
+    const char* messages[] = {
+        "CRITICAL: Battery at -67%. CHARGE IMMEDIATELY!",
+        "System Update: Restarting in 5 seconds...",
+        "SECURITY ALERT: All your DATA has been leaked to hackers.",
+        "WARNING: Battery Temperature at -854 C.",
+        "The weather is nice outside."
+    };
+
+    int index = rand() % 5;
+    
+    // On ajoute '&' à la fin pour lancer zenity en arrière-plan et ne pas bloquer le programme
+    std::string cmd = "zenity --notification --text=\"" + std::string(messages[index]) + "\" 2>/dev/null &";
+    
+    system(cmd.c_str());
+    std::cout << "[System] Fake notification triggered: " << messages[index] << std::endl;
 }
 
 void GlitchManager::pasteRandomImage(sf::RenderTexture &canvas, const AssetManager &assets)

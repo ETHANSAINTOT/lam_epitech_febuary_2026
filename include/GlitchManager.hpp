@@ -30,6 +30,7 @@
             void leakMemory();
             void pasteRandomImage(sf::RenderTexture &canvas, const AssetManager &assets);
             void playRandomSound(const AssetManager &assets);
+            void triggerFakeNotification();
             
             std::vector<void*> _uselessMemory;
             sf::Clock _freezeTimer;
