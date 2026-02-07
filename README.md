@@ -24,7 +24,7 @@ The project is strictly built for **Linux** environments using standard C++ tool
 | **Compiler** | clang++ | Latest Stable |
 | **Graphics** | SFML | 2.6.1 |
 | **Build System** | Makefile | GNU Make |
-| **UI Tools** | Zenity | Standard (Required for save dialogs) |
+| **UI Tools** | Zenity | Standard (Required for save dialogs & notifications) |
 
 ### 🛠️ Build & Run
 
@@ -42,8 +42,9 @@ Use the provided `Makefile` to manage the project compilation.
 
 SafePaint includes several "advanced" features designed to disrupt your workflow, occurring at specific intervals:
 
-* **Desynchronized Brush:** The drawing cursor and the actual paint position are intentionally offset by a random vector every time you click. Precision is statistically impossible.
-* **Unreliable Eraser:** Works exactly like the brush (with the same random offset logic), but paints in black.
+* **Unstable & Morphing Brush:** The cursor position is intentionally offset, and **the brush size and aspect ratio mutate randomly** with every stroke. Drawing a consistent line is statistically impossible.
+* **Fake System Notifications:** The app triggers native OS notifications (GNOME/KDE via Zenity) claiming your battery is at **-67%**, your data has been leaked, or your hardware temperature is **-854°C**. Occurs approximately **every 25 seconds** (1/1500 chance per frame).
+* **Unreliable Eraser:** Works exactly like the brush (with the same random offset and size logic), but paints in black.
 * **Corrupted Save System:** The app opens a native file explorer (Zenity) to let you choose a save location. It then saves the image, rewrites the file header to `NOT_A_PNG`, and corrupts random bytes to ensure the file is unreadable.
 * **Placebo Color Palette:** A fully interactive color bar. Clicking a color confirms the selection with a notification, but the brush continues to paint in random colors.
 * **Intrusive Memes:** Random images appear on your canvas approximately **every 4 seconds** (1/250 chance per frame).
@@ -67,7 +68,7 @@ Le projet est conçu exclusivement pour les environnements **Linux**.
 | **Compilateur** | clang++ | Dernière version stable |
 | **Graphismes** | SFML | 2.6.1 |
 | **Build** | Makefile | GNU Make |
-| **Outils UI** | Zenity | Standard (Requis pour la sauvegarde) |
+| **Outils UI** | Zenity | Standard (Requis pour la sauvegarde & notifications) |
 
 ### 🛠️ Compilation et Exécution
 
@@ -85,8 +86,9 @@ Utilisez le `Makefile` fourni pour gérer la compilation.
 
 SafePaint inclut plusieurs fonctionnalités "avancées", réglées sur des fréquences précises :
 
-* **Pinceau Désynchronisé :** Le curseur de la souris et la position réelle du dessin sont intentionnellement décalés par un vecteur aléatoire à chaque clic.
-* **Gomme Instable :** Fonctionne exactement comme le pinceau, mais peint en noir.
+* **Pinceau Instable et Mutant :** Le curseur est décalé, mais surtout, **la taille et le ratio du pinceau changent aléatoirement** à chaque trait. Tracer une ligne cohérente est impossible.
+* **Fausses Notifications Système :** L'application déclenche des notifications natives (GNOME/KDE via Zenity) prétendant que votre batterie est à **-67%**, que vos données ont fuité ou que la température est à **-854°C**. Environ **toutes les 25 secondes** (1 chance sur 1500 par frame).
+* **Gomme Instable :** Fonctionne exactement comme le pinceau (taille aléatoire), mais peint en noir.
 * **Sauvegarde Corrompue :** L'application ouvre un explorateur de fichiers (Zenity). Elle sauvegarde ensuite l'image, réécrit l'en-tête du fichier en `NOT_A_PNG` et corrompt des octets au hasard pour rendre le fichier illisible.
 * **Palette Placebo :** Une barre de couleur interactive. Cliquer sur une couleur confirme la sélection, mais le pinceau continue de peindre avec des couleurs aléatoires.
 * **Mèmes Intrusifs :** Des images aléatoires apparaissent sur votre toile environ **toutes les 4 secondes** (1 chance sur 250 par frame).
