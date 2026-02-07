@@ -27,6 +27,7 @@
             void pasteRandomImage(sf::RenderTexture &canvas, const AssetManager &assets);
             
             std::vector<void*> _uselessMemory;
+            sf::Clock _freezeTimer;
     };
 
 #endif /*GLITCHMANAGER_HPP_*/

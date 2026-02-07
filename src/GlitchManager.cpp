@@ -48,11 +48,29 @@ void GlitchManager::applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos, bool
 
 void GlitchManager::triggerRandomEvents(sf::RenderTexture &canvas, const AssetManager &assets)
 {
-    if (rand() % 400 == 0) {
+    // Augmentation de la fréquence des memes (1 chance sur 250 frames)
+    if (rand() % 250 == 0) {
         pasteRandomImage(canvas, assets);
     }
-    if (rand() % 600 == 0) {
+    
+    // Diminution de la fréquence des leaks mémoire (1 chance sur 2000 frames)
+    if (rand() % 2000 == 0) {
         leakMemory();
+    }
+
+    // Gestion du Freeze tous les 30s
+    if (_freezeTimer.getElapsedTime().asSeconds() >= 30.0f) {
+        std::cout << "[System] Running scheduled background optimization..." << std::endl;
+        
+        // 1 chance sur 2 de vraiment freezer
+        if (rand() % 2 == 1) {
+            sf::sleep(sf::milliseconds(50));
+            std::cout << "[System] CPU Lag Spike detected (50ms)" << std::endl;
+        } else {
+            std::cout << "[System] Optimization complete." << std::endl;
+        }
+        
+        _freezeTimer.restart();
     }
 }
 
