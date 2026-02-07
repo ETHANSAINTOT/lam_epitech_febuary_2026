@@ -2,12 +2,15 @@
 ** EPITECH PROJECT, 2026
 ** JAM #1
 ** File description:
-** src/GlitchManager.cpp
+** GlitchManager.cpp
 */
 
 #include "../include/GlitchManager.hpp"
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
+#include <ctime>
+#include <filesystem>
 #include <iostream>
 
 GlitchManager::GlitchManager()
@@ -23,68 +26,87 @@ sf::Color GlitchManager::getGlitchColor()
     return sf::Color(rand() % 255, rand() % 255, rand() % 255, rand() % 50 + 200);
 }
 
-void GlitchManager::applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos)
+void GlitchManager::applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos, bool isEraser)
 {
     int offsetX = (rand() % 30) - 15;
     int offsetY = (rand() % 30) - 15;
 
     sf::RectangleShape brush(sf::Vector2f(20, 20));
     brush.setPosition(pos.x + offsetX, pos.y + offsetY);
-    brush.setFillColor(getGlitchColor());
+    
+    if (isEraser) {
+        brush.setFillColor(sf::Color::Black);
+    } else {
+        brush.setFillColor(getGlitchColor());
+    }
+    
     canvas.draw(brush);
 }
 
 void GlitchManager::triggerRandomEvents(sf::RenderTexture &canvas, const AssetManager &assets)
 {
-    // 1 chance of 200 to past a random meme
-    if (rand() % 200 == 0) {
+    if (rand() % 400 == 0) {
         pasteRandomImage(canvas, assets);
     }
-
-    // 1 chance of 500 to allocate memory for nothinbg
-    if (rand() % 500 == 0) {
+    if (rand() % 600 == 0) {
         leakMemory();
     }
 }
 
 void GlitchManager::pasteRandomImage(sf::RenderTexture &canvas, const AssetManager &assets)
 {
-    if (!assets.hasTextures()) return;
-
     sf::Sprite sprite;
-    sprite.setTexture(assets.getRandomTexture());
+    sprite.setTexture(assets.getRandomMeme());
 
-    // Position aléatoire
     float x = rand() % canvas.getSize().x;
     float y = rand() % canvas.getSize().y;
-    
-    // Taille aléatoire (entre 0.2x et 1.5x)
     float scale = (float)(rand() % 13 + 2) / 10.0f;
 
     sprite.setPosition(x, y);
     sprite.setScale(scale, scale);
-    
-    // Rotation aléatoire
     sprite.setRotation(rand() % 360);
 
     canvas.draw(sprite);
-    std::cout << "[Feature] A meme appeared!" << std::endl;
 }
 
 void GlitchManager::leakMemory()
 {
-    // Alloue entre 10Mo et 512Mo
     size_t size = (rand() % 502 + 10) * 1024 * 1024;
-    
     try {
         void* ptr = std::malloc(size);
         if (ptr) {
-            // On écrit dedans pour forcer l'allocation physique (RAM réelle)
             std::memset(ptr, 1, size); 
             _uselessMemory.push_back(ptr);
-            std::cout << "[System] " << (size / 1024 / 1024) << "MB allocated successfully for no reason." << std::endl;
         }
-    } catch (...) {
-        std::cout << "[System] Failed to allocate memory (RAM is full ? Good.)" << std::endl;
+    } catch (...) {}
+}
+
+void GlitchManager::saveAndCorrupt(const sf::RenderTexture &canvas)
+{
+    if (!std::filesystem::exists("save"))
+        std::filesystem::create_directory("save");
+
+    std::string filename = "save/drawing_" + std::to_string(std::time(nullptr)) + ".png";
+    sf::Image screenshot = canvas.getTexture().copyToImage();
+    
+    if (!screenshot.saveToFile(filename))
+        return;
+    
+    std::fstream file(filename, std::ios::in | std::ios::out | std::ios::binary);
+    if (file.is_open()) {
+        file.seekp(0);
+        char garbage[] = "NOT_A_PNG"; 
+        file.write(garbage, sizeof(garbage));
+
+        file.seekg(0, std::ios::end);
+        long fileSize = file.tellg();
+        
+        for (int i = 0; i < 50; i++) {
+            long pos = rand() % fileSize;
+            file.seekp(pos);
+            char byte = rand() % 255;
+            file.write(&byte, 1);
+        }
+        file.close();
     }
 }

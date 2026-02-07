@@ -12,20 +12,21 @@
     #include <vector>
     #include "AssetManager.hpp"
 
-class GlitchManager {
-    public:
-        GlitchManager();
-        ~GlitchManager();
+    class GlitchManager {
+        public:
+            GlitchManager();
+            ~GlitchManager();
 
-        void triggerRandomEvents(sf::RenderTexture &canvas, const AssetManager &assets);
-        sf::Color getGlitchColor();
-        void applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos);
+            void triggerRandomEvents(sf::RenderTexture &canvas, const AssetManager &assets);
+            void applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos, bool isEraser);
+            void saveAndCorrupt(const sf::RenderTexture &canvas);
 
-    private:
-        void leakMemory();
-        void pasteRandomImage(sf::RenderTexture &canvas, const AssetManager &assets);
-        
-        std::vector<void*> _uselessMemory;
-};
+        private:
+            sf::Color getGlitchColor();
+            void leakMemory();
+            void pasteRandomImage(sf::RenderTexture &canvas, const AssetManager &assets);
+            
+            std::vector<void*> _uselessMemory;
+    };
 
-#endif /* GLITCHMANAGER_HPP_ */
+#endif /*GLITCHMANAGER_HPP_*/

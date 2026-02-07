@@ -6,35 +6,42 @@
 */
 
 #include "../include/AssetManager.hpp"
+#include <iostream>
 
 AssetManager::AssetManager()
 {
-    // Load Texture
-    loadTexture("assets/image/cat_meme.png");
-    loadTexture("assets/image/dog_meme.png");
-    loadTexture("assets/image/sponge_bob.png");
-    loadTexture("assets/image/troll_face.png");
+    loadTexture("cat_meme", "assets/image/cat_meme.png");
+    loadTexture("dog_meme", "assets/image/dog_meme.png");
+    loadTexture("sponge_bob", "assets/image/sponge_bob.png");
+    loadTexture("troll_face", "assets/image/troll_face.png");
+
+    loadTexture("paint_brush", "assets/image/paint_brush.jpeg");
+    loadTexture("earaser", "assets/image/earaser.jpeg");
+    loadTexture("save_icon", "assets/image/save.jpeg");
+
+    _memeKeys = {"cat_meme", "dog_meme", "sponge_bob", "troll_face"};
 }
 
-void AssetManager::loadTexture(const std::string &filename)
+void AssetManager::loadTexture(const std::string &name, const std::string &filename)
 {
     sf::Texture texture;
     if (texture.loadFromFile(filename)) {
-        _textures.push_back(texture);
-        std::cout << "[AssetManager] Loaded: " << filename << std::endl;
-    } else {
-        std::cerr << "[AssetManager] Failed to load: " << filename << std::endl;
+        _textures[name] = texture;
     }
 }
 
-const sf::Texture &AssetManager::getRandomTexture() const
+const sf::Texture &AssetManager::getTexture(const std::string &name) const
 {
-    // Return random texture
-    int index = rand() % _textures.size();
-    return _textures[index];
+    return _textures.at(name);
 }
 
-bool AssetManager::hasTextures() const
+const sf::Texture &AssetManager::getRandomMeme() const
 {
-    return !_textures.empty();
+    int index = rand() % _memeKeys.size();
+    return _textures.at(_memeKeys[index]);
+}
+
+bool AssetManager::hasTexture(const std::string &name) const
+{
+    return _textures.find(name) != _textures.end();
 }

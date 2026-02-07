@@ -29,8 +29,8 @@ void TrollRenderer::show()
     << "\n"
     << "   [ PROBLEM OFFICER ? ]\n"
     << std::endl;
-
     std::cout << ">>> CRITICAL ERROR: NO DISPLAY DETECTED." << std::endl;
     std::cout << ">>> LAUNCHING EMERGENCY TROLL PROTOCOL..." << std::endl;
     std::cout << ">>> IT'S NOT A BUG, IT'S A FEATURE." << std::endl;
 }
+

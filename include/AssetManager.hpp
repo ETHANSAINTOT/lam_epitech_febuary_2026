@@ -9,21 +9,23 @@
     #define ASSETMANAGER_HPP_
 
     #include <SFML/Graphics.hpp>
-    #include <vector>
+    #include <map>
     #include <string>
-    #include <iostream>
+    #include <vector>
 
-class AssetManager {
-    public:
-        AssetManager();
-        ~AssetManager() = default;
+    class AssetManager {
+        public:
+            AssetManager();
+            ~AssetManager() = default;
 
-        const sf::Texture &getRandomTexture() const;
-        bool hasTextures() const;
+            const sf::Texture &getTexture(const std::string &name) const;
+            const sf::Texture &getRandomMeme() const;
+            bool hasTexture(const std::string &name) const;
 
-    private:
-        void loadTexture(const std::string &filename);
-        std::vector<sf::Texture> _textures;
-};
+        private:
+            void loadTexture(const std::string &name, const std::string &filename);
+            std::map<std::string, sf::Texture> _textures;
+            std::vector<std::string> _memeKeys;
+    };
 
-#endif /* ASSETMANAGER_HPP_ */
+#endif /*ASSETMANAGER_HPP_*/

@@ -17,7 +17,8 @@ SRC = src/Main.cpp \
       src/SafePaint.cpp \
       src/TrollRenderer.cpp \
       src/AssetManager.cpp \
-      src/GlitchManager.cpp
+      src/GlitchManager.cpp \
+      src/UIManager.cpp
 
 OBJ = $(SRC:.cpp=.o)
 

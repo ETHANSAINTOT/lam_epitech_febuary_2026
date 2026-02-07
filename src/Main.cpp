@@ -7,10 +7,11 @@
 
 #include "../include/SafePaint.hpp"
 
+#include "../include/SafePaint.hpp"
+
 int main(void)
 {
     SafePaint app;
-
     app.run();
     return 0;
 }

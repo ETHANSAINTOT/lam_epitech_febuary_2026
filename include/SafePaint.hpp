@@ -12,34 +12,36 @@
     #include <memory>
     #include "GlitchManager.hpp"
     #include "AssetManager.hpp"
+    #include "UIManager.hpp"
 
-class SafePaint {
-    public:
-        SafePaint();
-        ~SafePaint();
+    class SafePaint {
+        public:
+            SafePaint();
+            ~SafePaint();
 
-        void run();
+            void run();
 
-    private:
-        void initGraphics();
-        void runGuiLoop();
-        void runHeadlessMode();
-        void handleEvents();
-        void updateDrawing();
+        private:
+            void initGraphics();
+            void runGuiLoop();
+            void runHeadlessMode();
+            void handleEvents();
+            void updateDrawing();
+            sf::Vector2i getMappedMousePosition();
 
-        sf::Vector2i getMappedMousePosition();
+            std::unique_ptr<sf::RenderWindow> _window;
+            std::unique_ptr<sf::RenderTexture> _canvas;
+            sf::Sprite _canvasSprite;
 
-        std::unique_ptr<sf::RenderWindow> _window;
-        std::unique_ptr<sf::RenderTexture> _canvas;
-        sf::Sprite _canvasSprite;
+            GlitchManager _glitcher;
+            AssetManager _assets;
+            UIManager _ui;
+            sf::Font _font;
 
-        GlitchManager _glitcher;
-        AssetManager _assets;
+            bool _isHeadless;
+            bool _isMouseHeld;
+            bool _isEraserMode;
+            sf::Vector2i _brushOffset;
+    };
 
-        bool _isHeadless;
-        bool _isMouseHeld;
-        
-        sf::Vector2i _brushOffset;
-};
-
-#endif /* SAFEPAINT_HPP_ */
+#endif /*SAFEPAINT_HPP_*/
