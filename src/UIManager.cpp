@@ -15,7 +15,6 @@ UIManager::UIManager() : _closeBtnOffset(0.0f), _isNotifVisible(false)
 
 void UIManager::moveCloseButton()
 {
-    // On déplace le bouton à un offset aléatoire (entre -400 et 400)
     _closeBtnOffset = (rand() % 800) - 400;
 }
 
@@ -135,14 +134,12 @@ void UIManager::draw(sf::RenderWindow &window)
     _btnUndo.setPosition(centerX - halfBtn, 8);
     _btnSave.setPosition(centerX + (1 * spacing) - halfBtn, 8);
     
-    // Calcul de la position de base du bouton Close
     float closeBaseX = centerX + (2 * spacing) - halfBtn;
     _btnClose.setPosition(closeBaseX + _closeBtnOffset, 8);
 
-    // Si la souris s'approche trop du bouton Close (distance < 100px)
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2f btnPos = _btnClose.getPosition();
-    float dx = mousePos.x - (btnPos.x + 32); // 32 est environ la moitié de la taille affichée
+    float dx = mousePos.x - (btnPos.x + 32);
     float dy = mousePos.y - (btnPos.y + 32);
     if (std::sqrt(dx*dx + dy*dy) < 100.0f) {
         moveCloseButton();
