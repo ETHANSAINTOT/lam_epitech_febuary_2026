@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2026
 ** JAM #1
 ** File description:
-** src/GlitchManager.cpp
+** GlitchManager.cpp
 */
 
 #include "../include/GlitchManager.hpp"
@@ -16,12 +16,17 @@
 #include <sstream>
 #include <cstdio>
 
-GlitchManager::GlitchManager()
+GlitchManager::GlitchManager() : _isSoundEnabled(true)
 {
 }
 
 GlitchManager::~GlitchManager()
 {
+}
+
+void GlitchManager::setSoundEnabled(bool enabled)
+{
+    _isSoundEnabled = enabled;
 }
 
 sf::Color GlitchManager::getGlitchColor()
@@ -48,21 +53,30 @@ void GlitchManager::applyBrush(sf::RenderTexture &canvas, sf::Vector2i pos, bool
 
 void GlitchManager::triggerRandomEvents(sf::RenderTexture &canvas, const AssetManager &assets)
 {
-    // Augmentation de la fréquence des memes (1 chance sur 250 frames)
+    // Nettoyage des sons terminés
+    _activeSounds.remove_if([](const sf::Sound &s) {
+        return s.getStatus() == sf::Sound::Stopped;
+    });
+
+    // MEMES : 1 chance sur 250 (toutes les ~4 sec)
     if (rand() % 250 == 0) {
         pasteRandomImage(canvas, assets);
     }
     
-    // Diminution de la fréquence des leaks mémoire (1 chance sur 2000 frames)
+    // MEMORY LEAK : 1 chance sur 2000 (toutes les ~33 sec)
     if (rand() % 2000 == 0) {
         leakMemory();
     }
 
-    // Gestion du Freeze tous les 30s
+    // SON : 1 chance sur 2000 (toutes les ~33 sec) - C'était 300 avant
+    if (rand() % 2000 == 0) {
+        playRandomSound(assets);
+    }
+
+    // FREEZE : Fixe toutes les 30 sec
     if (_freezeTimer.getElapsedTime().asSeconds() >= 30.0f) {
         std::cout << "[System] Running scheduled background optimization..." << std::endl;
         
-        // 1 chance sur 2 de vraiment freezer
         if (rand() % 2 == 1) {
             sf::sleep(sf::milliseconds(50));
             std::cout << "[System] CPU Lag Spike detected (50ms)" << std::endl;
@@ -89,6 +103,24 @@ void GlitchManager::pasteRandomImage(sf::RenderTexture &canvas, const AssetManag
 
     canvas.draw(sprite);
     std::cout << "[Feature] A wild meme appeared!" << std::endl;
+}
+
+void GlitchManager::playRandomSound(const AssetManager &assets)
+{
+    if (!_isSoundEnabled)
+        return;
+
+    _activeSounds.emplace_back();
+    sf::Sound &sound = _activeSounds.back();
+
+    sound.setBuffer(assets.getRandomSoundBuffer());
+    
+    float pitch = (rand() % 40 + 80) / 100.0f;
+    sound.setPitch(pitch);
+    
+    sound.play();
+
+    std::cout << "[Audio] Playing random sound effect (Pitch: " << pitch << ")" << std::endl;
 }
 
 void GlitchManager::leakMemory()

@@ -11,7 +11,7 @@ NAME = SafePaint
 
 CXX_FLAGS = -Wall -Wextra -Werror -std=c++20
 
-SFML_FLAGS = -lsfml-graphics -lsfml-system -lsfml-window
+SFML_FLAGS = -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio
 
 SRC = src/Main.cpp \
       src/SafePaint.cpp \

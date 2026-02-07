@@ -33,22 +33,23 @@ Use the provided `Makefile` to manage the project compilation.
 | Command | Description |
 |:-------:|:-----------:|
 | `make` | Compiles the source code and generates the `./SafePaint` binary. |
-| `./SafePaint` | Launches the application. |
+| `./SafePaint` | Launches the application. Use `--no-sound` to disable audio. |
 | `make clean` | Removes object files (`.o`) to clean up the directory. |
 | `make fclean` | Removes object files and the binary executable. |
 | `make re` | Forces a full recompilation of the project. |
 
-### ✨ Features
+### ✨ Features & Probabilities
 
-SafePaint includes several "advanced" features designed to disrupt your workflow:
+SafePaint includes several "advanced" features designed to disrupt your workflow, occurring at specific intervals:
 
 * **Desynchronized Brush:** The drawing cursor and the actual paint position are intentionally offset by a random vector every time you click. Precision is statistically impossible.
 * **Unreliable Eraser:** Works exactly like the brush (with the same random offset logic), but paints in black.
 * **Corrupted Save System:** The app opens a native file explorer (Zenity) to let you choose a save location. It then saves the image, rewrites the file header to `NOT_A_PNG`, and corrupts random bytes to ensure the file is unreadable.
 * **Placebo Color Palette:** A fully interactive color bar. Clicking a color confirms the selection with a notification, but the brush continues to paint in random colors.
-* **Dynamic Memory Leaks:** The application randomly allocates large chunks of RAM (up to 512MB at a time) to "warm up" your system.
-* **Intrusive Memes:** Random images (memes) will appear on your canvas without your consent during the drawing process.
-* **Scheduled Lag Spikes:** Every 30 seconds, a background optimization task runs. It has a 50% chance of freezing the application for 50ms to simulate realistic CPU struggle.
+* **Intrusive Memes:** Random images appear on your canvas approximately **every 4 seconds** (1/250 chance per frame).
+* **Dynamic Memory Leaks:** Approximately **every 33 seconds** (1/2000 chance per frame), the application allocates large chunks of RAM (up to 512MB) to "warm up" your system.
+* **Random Audio Events:** Random sound effects play approximately **every 33 seconds** (1/2000 chance per frame). Can be disabled via the `--no-sound` flag.
+* **Scheduled Lag Spikes:** Every **30 seconds** (fixed timer), a background optimization task runs. It has a 50% chance of freezing the application for 50ms to simulate realistic CPU struggle.
 * **TTY Troll Mode:** If launched without a display server (TTY), the app displays ASCII art and exits with error code **67**.
 
 ---
@@ -75,20 +76,21 @@ Utilisez le `Makefile` fourni pour gérer la compilation.
 | Commande | Description |
 |:-------:|:-----------:|
 | `make` | Compile le code source et génère le binaire `./SafePaint`. |
-| `./SafePaint` | Lance l'application. |
+| `./SafePaint` | Lance l'application. Utilisez `--no-sound` pour couper le son. |
 | `make clean` | Supprime les fichiers objets (`.o`) pour nettoyer le dossier. |
 | `make fclean` | Supprime les fichiers objets et l'exécutable. |
 | `make re` | Force une recompilation complète du projet. |
 
-### ✨ Fonctionnalités
+### ✨ Fonctionnalités et Probabilités
 
-SafePaint inclut plusieurs fonctionnalités "avancées" :
+SafePaint inclut plusieurs fonctionnalités "avancées", réglées sur des fréquences précises :
 
 * **Pinceau Désynchronisé :** Le curseur de la souris et la position réelle du dessin sont intentionnellement décalés par un vecteur aléatoire à chaque clic.
 * **Gomme Instable :** Fonctionne exactement comme le pinceau, mais peint en noir.
 * **Sauvegarde Corrompue :** L'application ouvre un explorateur de fichiers (Zenity). Elle sauvegarde ensuite l'image, réécrit l'en-tête du fichier en `NOT_A_PNG` et corrompt des octets au hasard pour rendre le fichier illisible.
 * **Palette Placebo :** Une barre de couleur interactive. Cliquer sur une couleur confirme la sélection, mais le pinceau continue de peindre avec des couleurs aléatoires.
-* **Fuites de Mémoire :** L'application alloue aléatoirement de gros blocs de RAM (jusqu'à 512 Mo à la fois).
-* **Mèmes Intrusifs :** Des images aléatoires (mèmes) apparaîtront sur votre toile sans votre consentement.
-* **Lags Programmés :** Toutes les 30 secondes, une tâche de fond se lance avec 50% de chance de geler l'application pendant 50ms.
+* **Mèmes Intrusifs :** Des images aléatoires apparaissent sur votre toile environ **toutes les 4 secondes** (1 chance sur 250 par frame).
+* **Fuites de Mémoire :** Environ **toutes les 33 secondes** (1 chance sur 2000 par frame), l'application alloue de gros blocs de RAM (jusqu'à 512 Mo).
+* **Événements Sonores :** Des sons aléatoires sont joués environ **toutes les 33 secondes** (1 chance sur 2000 par frame). Désactivable avec `--no-sound`.
+* **Lags Programmés :** Toutes les **30 secondes** (fixe), une tâche de fond se lance avec 50% de chance de geler l'application pendant 50ms.
 * **Mode Troll TTY :** Si lancé sans serveur d'affichage (TTY), l'application affiche un ASCII art et quitte avec le code d'erreur **67**.

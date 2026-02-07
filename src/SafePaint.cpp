@@ -10,9 +10,11 @@
 #include <cstdlib>
 #include <ctime>
 
-SafePaint::SafePaint() : _isHeadless(false), _isMouseHeld(false), _isEraserMode(false)
+SafePaint::SafePaint(bool soundEnabled) : _isHeadless(false), _isMouseHeld(false), _isEraserMode(false)
 {
     std::srand(std::time(nullptr));
+    _glitcher.setSoundEnabled(soundEnabled);
+    
     initGraphics();
     
     if (!_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {

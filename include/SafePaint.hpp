@@ -16,7 +16,7 @@
 
     class SafePaint {
         public:
-            SafePaint();
+            SafePaint(bool soundEnabled);
             ~SafePaint();
 
             void run();
