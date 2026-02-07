@@ -5,13 +5,6 @@
 ** src/UIManager.cpp
 */
 
-/*
-** EPITECH PROJECT, 2026
-** JAM #1
-** File description:
-** src/UIManager.cpp
-*/
-
 #include "../include/UIManager.hpp"
 
 UIManager::UIManager() : _isNotifVisible(false)
@@ -37,19 +30,16 @@ void UIManager::initToolbar(const AssetManager &assets)
     _topBar.setFillColor(sf::Color(50, 50, 50));
     _topBar.setPosition(0, 0);
 
-    auto setupButton = [&](sf::Sprite &sprite, const std::string &texName, float x) {
+    auto setupButton = [&](sf::Sprite &sprite, const std::string &texName) {
         if (assets.hasTexture(texName)) {
             sprite.setTexture(assets.getTexture(texName));
             sprite.setScale(64.f / 300.f, 64.f / 300.f);
-            sprite.setPosition(x, 8);
         }
     };
 
-    float centerX = 960.0f - 32.0f;
-
-    setupButton(_btnBrush, "paint_brush", centerX - 120);
-    setupButton(_btnEraser, "earaser", centerX);
-    setupButton(_btnSave, "save_icon", centerX + 120);
+    setupButton(_btnBrush, "paint_brush");
+    setupButton(_btnEraser, "earaser");
+    setupButton(_btnSave, "save_icon");
 }
 
 void UIManager::initPalette()
@@ -70,7 +60,6 @@ void UIManager::initPalette()
     
     _fakeSelectedColor.setSize(sf::Vector2f(40, 40));
     _fakeSelectedColor.setOutlineThickness(3);
-    
     _fakeSelectedColor.setOutlineColor(sf::Color::Transparent);
     _fakeSelectedColor.setFillColor(sf::Color::Transparent);
 }
@@ -89,13 +78,10 @@ ToolType UIManager::handleInput(sf::Vector2i mousePos)
     float bottomY = _bottomBar.getPosition().y;
     if (mousePos.y > bottomY) {
         std::string colorNames[] = {"Red", "Green", "Blue", "Yellow", "Magenta", "Cyan", "White"};
-
         for (size_t i = 0; i < _colorSwatches.size(); i++) {
             if (_colorSwatches[i].getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                 _fakeSelectedColor.setPosition(_colorSwatches[i].getPosition());
-                
                 _fakeSelectedColor.setOutlineColor(sf::Color::Red);
-                
                 showNotification("Selected: " + colorNames[i]);
                 return ToolType::NONE;
             }
@@ -124,6 +110,15 @@ void UIManager::draw(sf::RenderWindow &window)
     
     _topBar.setSize(sf::Vector2f(winSize.x, 80));
     window.draw(_topBar);
+
+    float centerX = winSize.x / 2.0f;
+    float btnSpacing = 120.0f;
+    float halfBtn = 32.0f; 
+
+    _btnBrush.setPosition(centerX - btnSpacing - halfBtn, 8);
+    _btnEraser.setPosition(centerX - halfBtn, 8);
+    _btnSave.setPosition(centerX + btnSpacing - halfBtn, 8);
+
     window.draw(_btnBrush);
     window.draw(_btnEraser);
     window.draw(_btnSave);

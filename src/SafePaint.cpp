@@ -9,7 +9,6 @@
 #include "../include/TrollRenderer.hpp"
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 
 SafePaint::SafePaint() : _isHeadless(false), _isMouseHeld(false), _isEraserMode(false)
 {
@@ -17,7 +16,6 @@ SafePaint::SafePaint() : _isHeadless(false), _isMouseHeld(false), _isEraserMode(
     initGraphics();
     
     if (!_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
-        // Fallback or empty font
     }
     if (!_isHeadless)
         _ui.init(_assets, _font);
@@ -38,7 +36,7 @@ void SafePaint::initGraphics()
 
     _window = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(1280, 720),
-        "SafePaint - It's not a bug, it's a feature",
+        "SafePaint",
         sf::Style::Default
     );
     _window->setFramerateLimit(60);
@@ -101,7 +99,7 @@ void SafePaint::handleEvents()
                         _ui.showNotification("Tool: Eraser");
                     } else if (action == ToolType::SAVE_ACTION) {
                         _glitcher.saveAndCorrupt(*_canvas);
-                        _ui.showNotification("Saved");
+                        _ui.showNotification("Image Saved");
                     }
                     _isMouseHeld = false;
                 } else {
