@@ -18,6 +18,7 @@
         ERASER,
         SAVE_ACTION,
         CLOSE_ACTION,
+        UNDO_ACTION,
         NONE
     };
 
@@ -40,6 +41,7 @@
             sf::Sprite _btnEraser;
             sf::Sprite _btnSave;
             sf::Sprite _btnClose;
+            sf::Sprite _btnUndo;
 
             sf::RectangleShape _bottomBar;
             std::vector<sf::RectangleShape> _colorSwatches;

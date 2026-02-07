@@ -10,6 +10,7 @@
 
     #include <SFML/Graphics.hpp>
     #include <memory>
+    #include <vector>
     #include "GlitchManager.hpp"
     #include "AssetManager.hpp"
     #include "UIManager.hpp"
@@ -27,15 +28,22 @@
             void runHeadlessMode();
             void handleEvents();
             void updateDrawing();
+            
+            void saveState();
+            void performUndo();
+
             sf::Vector2i getMappedMousePosition();
 
             std::unique_ptr<sf::RenderWindow> _window;
             std::unique_ptr<sf::RenderTexture> _canvas;
             sf::Sprite _canvasSprite;
+
             GlitchManager _glitcher;
             std::unique_ptr<AssetManager> _assets;
             UIManager _ui;
             sf::Font _font;
+            
+            std::vector<sf::Texture> _history;
 
             bool _isHeadless;
             bool _isMouseHeld;

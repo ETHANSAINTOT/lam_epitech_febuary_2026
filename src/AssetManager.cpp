@@ -19,6 +19,7 @@ AssetManager::AssetManager()
     loadTexture("earaser", "assets/image/earaser.jpeg");
     loadTexture("save_icon", "assets/image/save.jpeg");
     loadTexture("close_icon", "assets/image/close.jpeg");
+    loadTexture("undo_icon", "assets/image/undo.jpeg");
 
     _memeKeys = {"cat_meme", "dog_meme", "sponge_bob", "troll_face"};
 

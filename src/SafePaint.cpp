@@ -10,12 +10,12 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstring>
-#include <string_view>
 
 SafePaint::SafePaint(bool soundEnabled, char **env) : _isHeadless(true), _isMouseHeld(false), _isEraserMode(false)
 {
     std::srand(std::time(nullptr));
     _glitcher.setSoundEnabled(soundEnabled);
+    
     if (env != nullptr) {
         for (int i = 0; env[i] != nullptr; ++i) {
             if (std::strncmp(env[i], "DISPLAY=", 8) == 0) {
@@ -24,14 +24,15 @@ SafePaint::SafePaint(bool soundEnabled, char **env) : _isHeadless(true), _isMous
             }
         }
     }
-    if (_isHeadless) {
-        return; 
-    }
-    _assets = std::make_unique<AssetManager>();
 
+    if (_isHeadless) return; 
+
+    _assets = std::make_unique<AssetManager>();
     initGraphics();
+    
     if (!_font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
     }
+    
     if (_assets) {
         _ui.init(*_assets, _font);
     }
@@ -77,6 +78,36 @@ void SafePaint::runHeadlessMode()
     exit(67);
 }
 
+void SafePaint::saveState()
+{
+    if (_history.size() > 20) {
+        _history.erase(_history.begin());
+    }
+    _history.push_back(_canvas->getTexture());
+}
+
+void SafePaint::performUndo()
+{
+    // 50% de chance de restaurer l'état
+    if (rand() % 2 == 0) {
+        if (!_history.empty()) {
+            sf::Sprite sprite(_history.back());
+            _canvas->draw(sprite, sf::BlendNone); // BlendNone pour écraser complètement
+            _canvas->display();
+            _history.pop_back();
+            _ui.showNotification("Action Undone");
+        } else {
+            _ui.showNotification("Nothing to Undo");
+        }
+    } else {
+        // 50% de chance de faire n'importe quoi (ici, remplir d'une couleur random)
+        sf::Color chaoticColor(rand() % 255, rand() % 255, rand() % 255);
+        _canvas->clear(chaoticColor);
+        _canvas->display();
+        _ui.showNotification("Undo failed successfully");
+    }
+}
+
 sf::Vector2i SafePaint::getMappedMousePosition()
 {
     if (!_window) return sf::Vector2i(0,0);
@@ -113,11 +144,16 @@ void SafePaint::handleEvents()
                     } else if (action == ToolType::SAVE_ACTION) {
                         _glitcher.saveAndCorrupt(*_canvas);
                         _ui.showNotification("Image Saved");
+                    } else if (action == ToolType::UNDO_ACTION) {
+                        performUndo();
                     } else if (action == ToolType::CLOSE_ACTION) {
                         _window->close();
                     }
                     _isMouseHeld = false;
                 } else {
+                    // C'est ici qu'on commence à dessiner, donc on sauvegarde l'état AVANT
+                    saveState();
+                    
                     _isMouseHeld = true;
                     sf::Vector2i realMousePos = getMappedMousePosition();
                     sf::Vector2i randomStartPos(
@@ -153,6 +189,7 @@ void SafePaint::updateDrawing()
         _glitcher.applyBrush(*_canvas, drawPos, _isEraserMode);
         _canvas->display();
     }
+    
     if (_assets) {
         _glitcher.triggerRandomEvents(*_canvas, *_assets);
     }
