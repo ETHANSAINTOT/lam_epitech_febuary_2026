@@ -70,6 +70,7 @@ void GlitchManager::pasteRandomImage(sf::RenderTexture &canvas, const AssetManag
     sprite.setRotation(rand() % 360);
 
     canvas.draw(sprite);
+    std::cout << "[Feature] A wild meme appeared!" << std::endl;
 }
 
 void GlitchManager::leakMemory()
@@ -80,8 +81,11 @@ void GlitchManager::leakMemory()
         if (ptr) {
             std::memset(ptr, 1, size); 
             _uselessMemory.push_back(ptr);
+            std::cout << "[System] " << (size / 1024 / 1024) << "MB allocated successfully for no reason." << std::endl;
         }
-    } catch (...) {}
+    } catch (...) {
+        std::cout << "[System] Failed to allocate memory (RAM is full ? Good.)" << std::endl;
+    }
 }
 
 void GlitchManager::saveAndCorrupt(const sf::RenderTexture &canvas)
