@@ -22,6 +22,13 @@
         NONE
     };
 
+    struct GhostCursor {
+        sf::Vector2f offset;
+        sf::Clock lifetime;
+        float duration;
+        bool visible;
+    };
+
     class UIManager {
         public:
             UIManager();
@@ -36,6 +43,7 @@
             void initToolbar(const AssetManager &assets);
             void initPalette();
             void moveCloseButton();
+            void updateGhostCursors();
 
             sf::RectangleShape _topBar;
             sf::Sprite _btnBrush;
@@ -53,6 +61,10 @@
             sf::RectangleShape _notifBg;
             sf::Clock _notifTimer;
             bool _isNotifVisible;
+
+            sf::Sprite _ghostCursorSprite;
+            std::vector<GhostCursor> _ghostCursors;
+            sf::Clock _ghostSpawnTimer;
     };
 
 #endif /*UIMANAGER_HPP_*/

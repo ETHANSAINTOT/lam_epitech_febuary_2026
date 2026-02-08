@@ -49,6 +49,37 @@ void UIManager::initToolbar(const AssetManager &assets)
     setupButton(_btnSave, "save_icon");
     setupButton(_btnClose, "close_icon");
     setupButton(_btnUndo, "undo_icon");
+
+    if (assets.hasTexture("paint_brush")) {
+        _ghostCursorSprite.setTexture(assets.getTexture("paint_brush"));
+        _ghostCursorSprite.setScale(32.f / 300.f, 32.f / 300.f);
+        _ghostCursorSprite.setColor(sf::Color(255, 255, 255, 150));
+    }
+}
+
+void UIManager::updateGhostCursors()
+{
+    if (_ghostSpawnTimer.getElapsedTime().asSeconds() > 2.0f) {
+        if (rand() % 2 == 0 && _ghostCursors.size() < 10) {
+            GhostCursor gc;
+            gc.offset = sf::Vector2f((rand() % 400) - 200, (rand() % 400) - 200);
+            gc.duration = (rand() % 5) + 2;
+            gc.lifetime.restart();
+            gc.visible = true;
+            _ghostCursors.push_back(gc);
+        }
+        _ghostSpawnTimer.restart();
+    }
+
+    for (auto it = _ghostCursors.begin(); it != _ghostCursors.end();) {
+        if (it->lifetime.getElapsedTime().asSeconds() > it->duration) {
+            it = _ghostCursors.erase(it);
+        } else {
+            // Fait clignoter le curseur fantôme
+            if (rand() % 50 == 0) it->visible = !it->visible;
+            ++it;
+        }
+    }
 }
 
 void UIManager::initPalette()
@@ -151,6 +182,15 @@ void UIManager::draw(sf::RenderWindow &window)
     window.draw(_btnUndo);
     window.draw(_btnSave);
     window.draw(_btnClose);
+
+    updateGhostCursors();
+    sf::Vector2i mousePosActual = sf::Mouse::getPosition(window);
+    for (const auto &gc : _ghostCursors) {
+        if (gc.visible) {
+            _ghostCursorSprite.setPosition((float)mousePosActual.x + gc.offset.x, (float)mousePosActual.y + gc.offset.y);
+            window.draw(_ghostCursorSprite);
+        }
+    }
 
     _bottomBar.setPosition(0, winSize.y - 60);
     _bottomBar.setSize(sf::Vector2f(winSize.x, 60));
